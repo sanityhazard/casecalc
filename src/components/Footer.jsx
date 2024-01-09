@@ -33,7 +33,7 @@ function Footer({ name, price, saveFile, hasUnallocated, onPriceChange, onNameCh
                 <div>
                     <form>
                         <label htmlFor="price">Цена:</label>
-                        <input type="text" id="price" name="price" onChange={onPriceChange} value={price} />
+                        <input type="text" id="price" name="price" onChange={onPriceChange} value={price ? price : ''} />
                     </form>
                 </div>
             </div>

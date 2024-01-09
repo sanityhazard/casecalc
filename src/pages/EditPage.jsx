@@ -49,7 +49,35 @@ function EditPage() {
   const [name, setName] = useState('')
   const [simulationState, setSimulationState] = useState(false)
   const [simulationResult, setSimulationResult] = useState(0)
-  // const [name, setName] = useState('')
+  const [uploadedFile, setUploadedFile] = useState(null);
+
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+
+    reader.onload = (event) => {
+      const contents = event.target.result;
+      const json = JSON.parse(contents);
+      setUploadedFile({ name: file.name, data: json});
+    };
+
+    reader.readAsText(file);
+  };
+
+  useEffect(() => {
+    if (uploadedFile) {
+
+      if (uploadedFile.data.casePrice) {
+        setName(uploadedFile.name);
+        setPrice(uploadedFile.data.casePrice);
+        setItems()
+      }
+
+      setName(uploadedFile.name);
+      setPrice(uploadedFile.price);
+      setItems(uploadedFile.items);
+    }
+  }, [uploadedFile]);
 
   useEffect(() => {
     if (filename) {
