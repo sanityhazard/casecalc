@@ -16,3 +16,5 @@ services:
       - "8080:8080"
     depends_on:
       - react-app
+    volumes:
+      - ./backend:/app
