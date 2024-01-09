@@ -49,7 +49,46 @@ function EditPage() {
   const [name, setName] = useState('')
   const [simulationState, setSimulationState] = useState(false)
   const [simulationResult, setSimulationResult] = useState(0)
-  // const [name, setName] = useState('')
+  const [uploadedFile, setUploadedFile] = useState(null);
+
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+
+    reader.onload = (event) => {
+      const contents = event.target.result;
+      const json = JSON.parse(contents);
+      setUploadedFile({ name: file.name, data: json});
+    };
+
+    reader.readAsText(file);
+  };
+
+  useEffect(() => {
+    if (uploadedFile) {
+
+      if (uploadedFile.data.casePrice) {
+        setName(uploadedFile.name);
+        setPrice(uploadedFile.data.casePrice);
+        let newItems = []
+        for (let i = 0; i < uploadedFile.data.items.length; i++) {
+          console.log(uploadedFile.data.items[i])
+          newItems.push({
+            index: i,
+            name: uploadedFile.data.items[i].name,
+            price: uploadedFile.data.items[i].value,
+            dropRate: uploadedFile.data.items[i].dropRate
+          })
+        }
+        setItems(newItems)
+      }
+      else {
+        setName(uploadedFile.name);
+        setPrice(uploadedFile.data.price);
+        setItems(uploadedFile.data.items);
+      }
+    }
+  }, [uploadedFile]);
 
   useEffect(() => {
     if (filename) {
@@ -109,8 +148,8 @@ function EditPage() {
 
   useEffect(() => {
     if (items) {
-      setUnallocated((100 - items.reduce((acc, item) => acc + Number(item.dropRate), 0).toFixed(5)))
-      setWinrate(items.reduce((acc, item) => acc + (Number(item.price) >= price ? Number(item.dropRate) : 0), 0))
+      setUnallocated(((100 - items.reduce((acc, item) => acc + Number(item.dropRate), 0).toFixed(5)).toFixed(5)))
+      setWinrate((items.reduce((acc, item) => acc + (Number(item.price) >= price ? Number(item.dropRate) : 0), 0)).toFixed(5))
       setAvgPayback((price - items.reduce((acc, item) => acc + Number(item.price) * (Number(item.dropRate) / 100), 0)).toFixed(2))
     }
   }, [items, price])
@@ -123,7 +162,8 @@ function EditPage() {
     <div className='container'>
       <Header />
       <Info winrate={winrate} payback={avgPayback} unallocated={unallocated} />
-      <ItemContainer handleAdd={handleAdd} handleChange={handleChange} handleDelete={handleDelete} items={items} />
+      <input type="file" onChange={handleFileUpload} />
+      <ItemContainer handleAdd={handleAdd} handleChange={handleChange} handleDelete={handleDelete} setItems={setItems} items={items} />
       <Footer simulate={simulate} name={name} price={price} onPriceChange={handlePriceChange} onNameChange={handleNameChange} hasUnallocated={unallocated} saveFile={() => saveFile(name, price, items)} />
       { 
       [1, 2].includes(simulationState) &&

@@ -1,6 +1,6 @@
 function Item({ item, index, handleChange, handleDelete }) {
     return ( 
-        <div className="item">
+        <div>
             <div className="item_grid">
                 <div className="div1">
                     <label htmlFor="name">Название</label>
