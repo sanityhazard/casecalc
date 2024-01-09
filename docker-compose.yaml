@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  react-app:
+    build: .
+    ports:
+      - "80:80"
+    volumes:
+      - ./:/app
+
+  app:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - react-app
