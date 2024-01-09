@@ -25,7 +25,7 @@ class Item(BaseModel):
     index: int | None
     name: int | str | None
     price: int | str | None
-    dropRate: int | str | None
+    dropRate: float | int | str | None
 
 class Case(BaseModel):
     name: int | str | None
