@@ -70,12 +70,23 @@ function EditPage() {
       if (uploadedFile.data.casePrice) {
         setName(uploadedFile.name);
         setPrice(uploadedFile.data.casePrice);
-        setItems()
+        let newItems = []
+        for (let i = 0; i < uploadedFile.data.items.length; i++) {
+          console.log(uploadedFile.data.items[i])
+          newItems.push({
+            index: i,
+            name: uploadedFile.data.items[i].name,
+            price: uploadedFile.data.items[i].value,
+            dropRate: uploadedFile.data.items[i].dropRate
+          })
+        }
+        setItems(newItems)
       }
-
-      setName(uploadedFile.name);
-      setPrice(uploadedFile.price);
-      setItems(uploadedFile.items);
+      else {
+        setName(uploadedFile.name);
+        setPrice(uploadedFile.data.price);
+        setItems(uploadedFile.data.items);
+      }
     }
   }, [uploadedFile]);
 
@@ -137,8 +148,8 @@ function EditPage() {
 
   useEffect(() => {
     if (items) {
-      setUnallocated(100 - items.reduce((acc, item) => acc + Number(item.dropRate), 0))
-      setWinrate(items.reduce((acc, item) => acc + (Number(item.price) >= price ? Number(item.dropRate) : 0), 0))
+      setUnallocated((100 - items.reduce((acc, item) => acc + Number(item.dropRate), 0).toFixed(5)))
+      setWinrate((items.reduce((acc, item) => acc + (Number(item.price) >= price ? Number(item.dropRate) : 0), 0)).toFixed(5))
       setAvgPayback((price - items.reduce((acc, item) => acc + Number(item.price) * (Number(item.dropRate) / 100), 0)).toFixed(2))
     }
   }, [items, price])
@@ -151,7 +162,8 @@ function EditPage() {
     <div className='container'>
       <Header />
       <Info winrate={winrate} payback={avgPayback} unallocated={unallocated} />
-      <ItemContainer handleAdd={handleAdd} handleChange={handleChange} handleDelete={handleDelete} items={items} />
+      <input type="file" onChange={handleFileUpload} />
+      <ItemContainer handleAdd={handleAdd} handleChange={handleChange} handleDelete={handleDelete} setItems={setItems} items={items} />
       <Footer simulate={simulate} name={name} price={price} onPriceChange={handlePriceChange} onNameChange={handleNameChange} hasUnallocated={unallocated} saveFile={() => saveFile(name, price, items)} />
       { 
       [1, 2].includes(simulationState) &&
