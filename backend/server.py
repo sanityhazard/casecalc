@@ -23,13 +23,13 @@ app.add_middleware(
 
 class Item(BaseModel):
     index: int | None
-    name: str | None
-    price: str | None
-    dropRate: str | None
+    name: int | str | None
+    price: int | str | None
+    dropRate: int | str | None
 
 class Case(BaseModel):
-    name: str | None
-    price: str | None
+    name: int | str | None
+    price: int | str | None
     items: list[Item] | None
 
 
