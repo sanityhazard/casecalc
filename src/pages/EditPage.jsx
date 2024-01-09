@@ -148,7 +148,7 @@ function EditPage() {
 
   useEffect(() => {
     if (items) {
-      setUnallocated(((100 - items.reduce((acc, item) => acc + Number(item.dropRate), 0).toFixed(5)).toFixed(5)))
+      setUnallocated((100 - items.reduce((acc, item) => acc + Number(item.dropRate), 0).toFixed(5)))
       setWinrate((items.reduce((acc, item) => acc + (Number(item.price) >= price ? Number(item.dropRate) : 0), 0)).toFixed(5))
       setAvgPayback((price - items.reduce((acc, item) => acc + Number(item.price) * (Number(item.dropRate) / 100), 0)).toFixed(2))
     }
