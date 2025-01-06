@@ -69,8 +69,6 @@ async def load_data(file_name: str):
 
 @app.post("/simulate")
 async def simulate(case: Case, times: Optional[int] = 10000):
-    if times > 10000:
-        return {"error": "In the demo, you can only simulate cases up to 10000 times to prevent loading the server. Self-host the app to get more accurate results with more simulations."}
     items = random.choices(case.items, weights=[float(item.dropRate) for item in case.items], k=times)
     allCasinoWin = sum([float(case.price) - float(item.price) for item in items])
     avgCasinoWin = allCasinoWin / times
