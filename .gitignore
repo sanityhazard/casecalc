@@ -46,6 +46,9 @@ venv
 docs.zip
 archive.zip
 
+json_data
+venv
+
 # vim temporary files
 *~
 .*.sw?

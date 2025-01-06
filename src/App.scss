@@ -1,94 +1,206 @@
 @import url('https://fonts.googleapis.com/css2?family=DotGothic16&family=Roboto+Mono&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,100..1000&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap');
 
-button {
-  border: none;
-  cursor: pointer;
+$base-color: white;
+$secondary-color: #5F5F5F;
+$darkgray: #262626;
+$lightgray: #6B6B6B;
+
+* {
+  margin: 0;
+  padding: 0;
 }
 
-.container {
-  max-width: 1900px;
-  margin: 0 48px;
+.roboto-flex {
+  font-family: "Roboto Flex", serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-variation-settings:
+      "slnt" 0,
+      "wdth" 100,
+      "GRAD" 0,
+      "XOPQ" 96,
+      "XTRA" 468,
+      "YOPQ" 79,
+      "YTAS" 750,
+      "YTDE" -203,
+      "YTFI" 738,
+      "YTLC" 514,
+      "YTUC" 712;
 }
 
-.button__small {
-  font-family: 'Comic Sans MS', cursive, sans-serif;
-  color: white;
-  font-size: 24px;
-  background-color: #F07EC3;
-  border-bottom: 5px solid #3F05E3;
-  border-radius: 8px;
-  height: 55px;
-
-  &__delete {
-    @extend .button__small;
-    font-size: 18px;
-    background-color: #f13a3a;
-    border: none;
-    width: 50%;
-    margin: 20px;
-  }
+.roboto-flex-semibold {
+  @extend .roboto-flex;
+  font-weight: 600;
 }
 
-.button__big {
-  font-family: 'Comic Sans MS', cursive, sans-serif;
-  color: white;
-  font-size: 32px;
-  background-color: #F07EC3;
-  border-bottom: 5px solid #3F05E3;
-  border-radius: 8px;
-  height: 100px;
+.roboto-mono {
+  font-family: "Roboto Mono", serif;
+  font-optical-sizing: auto;
+  font-weight: 700;
+  font-style: normal;
+}
+
+body {
+  background-color: #141414;
+  color: $base-color;
+  padding: 3rem;
+  @extend .roboto-flex-semibold;
+}
+
+.copyright {
+  margin-top: 2.5rem;
   width: 100%;
+  text-align: center;
+  color: $secondary-color;
+  font-size: 0.75rem;
 }
 
-.choice {
-  display: flex;
-  gap: 20px;
-}
-
-header {
-  font-family: 'DotGothic16', cursive, sans-serif;
-  font-size: 16px;
-  color: turquoise;
-}
-
-.column {
+.center {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  width: 100%;
-}
+  align-items: center;
+  justify-content: center;
 
-.recent {
-  h3 {
-    color: turquoise;
-  }
-  .files {
+  .content-main {
     display: flex;
-    gap: 20px;
-  }
-  font-family: 'Comic Sans MS', cursive, sans-serif;
-  font-size: 24px;
-}
+    flex-direction: column;
+    gap: 3rem;
+    width: 640px;
 
-.info {
-  display: flex;
-  gap: 20px;
-  // justify-content: space-between;
-  div {
-    background: #D9D9D9;
-    font-family: Comic Sans MS;
-    font-size: 22px;
+    header {
+      h1 {
+        font-size: 24px;
+        @extend .roboto-mono;
+      }
+      
+      p {
+        @extend .roboto-flex-semibold;
+      }
+    }
+
+    .buttons {
+      display: flex;
+      gap: 20px;
+      width: 100%;
+      
+      button {
+        width: 100%;
+        height: 90px;
+        border: none;
+        font-size: 24px;
+        @extend .roboto-flex-semibold;
+        cursor: pointer;
+      }
+
+      #main {
+        background-color: white;
+        color: black;
+      }
+
+      #secondary {
+        background-color: $darkgray;
+        color: $lightgray;
+      }
+    }
+  }
+
+  .content-edit {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 50px;
+    flex-direction: column;
+    gap: 3rem;
+    width: 1240px;
+
+    .info-section {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+
+      .info {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-rows: 1fr 1fr;
+        gap: 10px 10px;
+        grid-auto-flow: row;
+        grid-template-areas:
+          "winrate average unallocated"
+          "load-button load-button load-button";
+      }
+      
+      .winrate { grid-area: winrate; }
+      .average { grid-area: average; }
+      .unallocated { grid-area: unallocated; }
+      .load-button { grid-area: load-button; }
+
+      .info__item {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #262626;
+        color: #6B6B6B;
+        border: none;
+        @extend .roboto-flex-semibold;
+        font-size: 18px;
+        text-align: center;
+        padding: 15px 0;
+      }
+      
+    }
+
+    // .item_container {
+    //   display: grid; 
+    //   grid-auto-rows: 1fr; 
+    //   grid-template-columns: 1fr 1fr 1fr; 
+    //   grid-template-rows: 1fr; 
+    //   gap: 0px 10px; 
+    //   grid-template-areas: 
+    //     ". . ."; 
+    //   align-items: center;
+    //   justify-items: center;
+
+    //   .item {
+    //     border: 2px white solid;
+    //     width: 100%;
+    //     // padding: 15px 20px;
+    //     box-sizing: border-box;
+    //     background-color: #262626;
+    //     .item_grid {
+    //       div {
+    //         display: flex;
+    //         flex-direction: column;
+    //         gap: 5px;
+    //       }
+    //       display: grid; 
+    //       grid-auto-rows: 1fr; 
+    //       grid-template-columns: 1fr 1fr; 
+    //       grid-template-rows: 1fr 1fr 1fr; 
+    //       gap: 15px 20px; 
+    //       grid-template-areas: 
+    //         "div1 div1"
+    //         "div2 div3"
+    //         "button_delete button_delete"; 
+
+    //       .div1 { grid-area: div1; }
+    //       .div2 { grid-area: div2; }
+    //       .div3 { grid-area: div3; }
+    //       .button_delete { grid-area: button_delete; }
+    //     }
+    //   }
+
+    //   .add_button {
+    //     width: 50%;
+    //     height: 50%;
+    //   }
+    // }
+
+    }
+
+  .secondary {
+    color: $secondary-color
   }
 }
 
-// .info > div, .item {
-//   flex: 1;
-// }
 
 .item {
   display: flex;
@@ -96,105 +208,94 @@ header {
   gap: 10px;
   // width: 435px;
   // height: 240px;
-  border: 3px solid #000;
-  border-radius: 15px;
   // padding: 20px;
   flex: 0 0 calc(33.33% - 20px);
-  // box-sizing: border-box
-  background: white;
+  background: #262626;
 }
 
 .item_grid {
-  font-family: Comic Sans MS;
   font-size: 20px;
-  display: grid; 
-  grid-template-columns: 1fr 1fr; 
-  grid-template-rows: 1fr 1fr; 
-  gap: 0px 20px; 
-  grid-template-areas: 
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 0px 20px;
+  grid-template-areas:
     "div1 div1"
-    "div2 div3"; 
+    "div2 div3";
+
   div {
     display: flex;
-    gap: 5px 0px; 
+    gap: 5px 0px;
     flex-direction: column;
     margin: 15px 20px;
     // margin-bottom: 20px;
   }
-  .div1 { grid-area: div1; }
-  .div2 { grid-area: div2; }
-  .div3 { grid-area: div3; }
+
+  .div1 {
+    grid-area: div1;
+  }
+
+  .div2 {
+    grid-area: div2;
+  }
+
+  .div3 {
+    grid-area: div3;
+  }
+
   input {
     height: 35px;
     box-sizing: border-box;
-    border: 3px dashed #000;
-    font-family: Comic Sans MS;
+    border: 2px solid #6B6B6B;
     font-size: 20px;
     width: 100%;
-    
+    background: none;
+    color: white;
+    padding: 5px;
+
     &:focus {
       outline: none;
     }
   }
-  
 }
 
-.item_container {
-  display: flex;
-  padding: 20px 0;
-  gap: 20px;
-  flex-wrap: wrap;
-  flex-grow: 1;
-  align-items: center;
-  // justify-content: space-evenly;
+.button_delete {
+  height: 50px;
+  color: red;
+  width: 100%;
+  background-color:#5F5F5F;
+  border: none;
+  color:#262626;
+  @extend .roboto-flex-semibold;
+  font-size: 18px;
 }
 
 .add_button {
-  height: 100px;
-  width: 100px;
-  border-radius: 50%;
-  font-size: 50px;
-  color: white;
-  background: #888;
+  height: 4rem;
+  width: 8rem;
+  align-self: center;
+  justify-self: center;
+  background-color: white;
+  border: none;
+  @extend .roboto-flex-semibold;
+  font-size: 18px;
 }
 
-.frame {
-  display: flex;
-  width: 100%;
-  height: 100%;
-  align-items: center;
+.item_container {
+  display: grid; 
+  grid-auto-rows: 1fr; 
+  grid-template-columns: 1fr 1fr 1fr; 
+  gap: 10px 10px;
 }
 
 footer {
-  margin-top: auto;
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  p {
-    font-size: 20px;
-    font-family: Comic Sans MS;
-  }
   .functional {
     display: flex;
-    button {
-      height: 100%;
-    }
+    justify-content: space-evenly;
     div {
       display: flex;
       flex-direction: column;
       gap: 10px;
-      margin-right: 20px;
-      form {
-        display: flex;
-        gap: 10px;
-        input {
-          border: none;
-          border-bottom: 1px solid #000;
-          &:focus {
-            outline: none;
-          }
-        }
-      }
     }
   }
 }

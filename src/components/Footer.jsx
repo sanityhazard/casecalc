@@ -37,9 +37,6 @@ function Footer({ name, price, saveFile, hasUnallocated, onPriceChange, onNameCh
                     </form>
                 </div>
             </div>
-            <p className="reminder">
-                И помните: Империя заботится о вас!
-            </p>
         </footer>
      );
 }

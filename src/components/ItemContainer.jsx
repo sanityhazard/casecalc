@@ -24,9 +24,44 @@ function SortableItem({ id, children }) {
   );
 }
 
+class MyPointerSensor extends PointerSensor {
+  static activators = [
+    {
+      eventName: 'onPointerDown',
+      handler: ({nativeEvent: event}) => {
+        if (
+          !event.isPrimary ||
+          event.button !== 0 ||
+          isInteractiveElement(event.target)
+        ) {
+          return false;
+        }
+
+        return true;
+      },
+    },
+  ];
+}
+
+function isInteractiveElement(element) {
+  const interactiveElements = [
+    'button',
+    'input',
+    'textarea',
+    'select',
+    'option',
+  ];
+
+  if (interactiveElements.includes(element.tagName.toLowerCase())) {
+    return true;
+  }
+
+  return false;
+}
+
 function ItemContainer({ handleAdd, handleDelete, handleChange, items, setItems }) {
   const sensors = useSensors(
-    useSensor(PointerSensor),
+    useSensor(MyPointerSensor),
   );
 
   const handleDragEnd = (event) => {
@@ -54,10 +89,8 @@ function ItemContainer({ handleAdd, handleDelete, handleChange, items, setItems 
             </SortableItem>
           ))}
           <button className="add_button" onClick={handleAdd}>
-            +
+            Add item
           </button>
-          <div className="frame">
-          </div>
         </div>
       </SortableContext>
     </DndContext>

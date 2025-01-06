@@ -1,6 +1,6 @@
 import '../App.scss'
 import { useParams } from 'react-router-dom'
-import Header from '../components/Header'
+import { HeaderEdit } from '../components/Header'
 import Info from '../components/Info'
 import Item from '../components/Item'
 import ItemContainer from '../components/ItemContainer'
@@ -159,25 +159,28 @@ function EditPage() {
   }
 
   return (
-    <div className='container'>
-      <Header />
-      <Info winrate={winrate} payback={avgPayback} unallocated={unallocated} />
-      <input type="file" onChange={handleFileUpload} />
-      <ItemContainer handleAdd={handleAdd} handleChange={handleChange} handleDelete={handleDelete} setItems={setItems} items={items} />
-      <Footer simulate={simulate} name={name} price={price} onPriceChange={handlePriceChange} onNameChange={handleNameChange} hasUnallocated={unallocated} saveFile={() => saveFile(name, price, items)} />
-      { 
-      [1, 2].includes(simulationState) &&
-        (
-          simulationState === 2 ? (
-            <div className="simulation">
-              <h3>Результаты симуляции:</h3>
-              <p>Весь выигрыш: {simulationResult.allCasinoWin} руб</p>
-              <p>Средний выигрыш: {Number(simulationResult.avgCasinoWin).toFixed(2)} руб</p>
-              <p>Винрейт: {`${simulationResult.casinoWinrate}%`}</p>
-            </div>
-          ) : <p>Загрузка симуляции...</p>
-        )
-      }
+    <div className='center'>
+      <div className="content-edit">
+        <div className="info-section">
+          <HeaderEdit />
+          <Info winrate={winrate} payback={avgPayback} unallocated={unallocated} handleFileUpload={handleFileUpload} />
+        </div>
+        <ItemContainer handleAdd={handleAdd} handleChange={handleChange} handleDelete={handleDelete} setItems={setItems} items={items} />
+        <Footer simulate={simulate} name={name} price={price} onPriceChange={handlePriceChange} onNameChange={handleNameChange} hasUnallocated={unallocated} saveFile={() => saveFile(name, price, items)} />
+        { 
+        [1, 2].includes(simulationState) &&
+          (
+            simulationState === 2 ? (
+              <div className="simulation">
+                <h3>Результаты симуляции:</h3>
+                <p>Весь выигрыш: {simulationResult.allCasinoWin} руб</p>
+                <p>Средний выигрыш: {Number(simulationResult.avgCasinoWin).toFixed(2)} руб</p>
+                <p>Винрейт: {`${simulationResult.casinoWinrate}%`}</p>
+              </div>
+            ) : <p>Загрузка симуляции...</p>
+          )
+        }
+        </div>
     </div >
   )
 }
