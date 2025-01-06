@@ -58,7 +58,7 @@ function MainPage() {
           <button id="main" onClick={() => nav('/edit/')}>Create config</button>
           <button id="secondary" onClick={() => fileInputRef.current.click()}>Load config</button>
         </div>
-        {/* <h2>Recently saved files will be shown here in a self-hosted version. This function is disabled right now for safety reasons.</h2> */}
+        <h2>Recently saved files will be shown here in a self-hosted version. This function is disabled right now for safety reasons.</h2>
         <Recent />
         <input onChange={handleChange} multiple={false} ref={fileInputRef} type='file' hidden />
       </div>
