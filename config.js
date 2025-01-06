@@ -1,3 +1,3 @@
-const BASEURL = "http://92.255.109.252:8080"; // URL of the server
+const BASEURL = "http://127.0.0.1:8000"; // URL of the server
 
 export default BASEURL;

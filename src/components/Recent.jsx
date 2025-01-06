@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 function Recent() {
     const [files, setFiles] = useState([]);
     const navigate = useNavigate();
-    // Step 1: Get the files from the API
+
     useEffect(() => {
         fetch(`${BASEURL}/files`)
             .then(response => response.json())
@@ -20,25 +20,13 @@ function Recent() {
         navigate(`/edit/${fileName}`);
     };
 
-    // Step 2: Divide the list into three columns
-    const columns = [[], [], []];
-    files.forEach((file, index) => {
-        const columnIndex = Math.floor(index / 6);
-        columns[columnIndex].push(file);
-    });
-
-    // Step 3: Render the columns with the files
     return (
         <div className="recent">
-            <h3>Недавние файлы:</h3>
+            <h3>Recent files:</h3>
             <div className="files">
-               {columns.map((column, i) => (
-                    <ButtonColumn key={i}>
-                        {column.map((file, j) => (
-                            <SmallButton key={j} openFile={() => openFile(file)} filename={file} />
-                        ))}
-                    </ButtonColumn>
-                ))} 
+                {files.map((file, j) => (
+                    <SmallButton key={j} openFile={() => openFile(file)} filename={file} />
+                ))}
             </div>
         </div>
     );

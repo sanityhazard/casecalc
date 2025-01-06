@@ -1,8 +1,8 @@
 function Info({ winrate, payback, unallocated, handleFileUpload }) {
-    return ( 
+    return (
         <div className="info">
             <div className="info__item winrate">
-                Winrate: {winrate}%
+                Players' winrate: {winrate}%
             </div>
             <div className="info__item average">
                 Average payback: {payback}
@@ -12,7 +12,7 @@ function Info({ winrate, payback, unallocated, handleFileUpload }) {
             </div>
             <input type="file" onChange={handleFileUpload} className="info__item load-button" />
         </div>
-     );
+    );
 }
 
 export default Info;

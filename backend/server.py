@@ -41,16 +41,6 @@ async def http_exception_handler(request, exc):
     print(f"Error message: {exc.detail}")
     return await request.app.default_exception_handler(request, exc)
 
-# @app.post("/save")
-# async def save_data(file_name: Annotated[str, Body()], items: list[Item]):
-#     # Save the data to a file
-#     if os.path.exists(f"{file_name}.json"):
-#         return {"message": "File already exists"}
-#     file_location = f'json_data/{file_name}.json'
-#     with open(file_location, 'w') as file:
-#         json.dump([item.dict() for item in items], file)
-#     return {"message": "Data saved"}
-
 @app.post("/save")
 async def save_data(case: Case):
     case_dict = case.dict()
@@ -78,14 +68,15 @@ async def load_data(file_name: str):
     return data
 
 @app.post("/simulate")
-async def simulate(case: Case, times: Optional[int] = 100000):
+async def simulate(case: Case, times: Optional[int] = 10000):
+    if times > 10000:
+        return {"error": "In the demo, you can only simulate cases up to 10000 times to prevent loading the server. Self-host the app to get more accurate results with more simulations."}
     items = random.choices(case.items, weights=[float(item.dropRate) for item in case.items], k=times)
     allCasinoWin = sum([float(case.price) - float(item.price) for item in items])
     avgCasinoWin = allCasinoWin / times
     casinoWinrate = len([item for item in items if float(item.price) < float(case.price)]) / times
 
     return {
-        'allCasinoWin': allCasinoWin,
         'avgCasinoWin': avgCasinoWin,
         'casinoWinrate': casinoWinrate * 100
     }

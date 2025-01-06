@@ -1,5 +1,5 @@
 import '../App.scss'
-import { useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { HeaderEdit } from '../components/Header'
 import Info from '../components/Info'
 import Item from '../components/Item'
@@ -16,21 +16,46 @@ function EditPage() {
   // const items = [<Item />, <Item />, <Item />]
 
   const { filename } = useParams()
-  
+  const { state } = useLocation()
+
   const saveFile = (name, price, items) => {
+    const fileData = {
+      name,
+      price,
+      items,
+    };
+
+    // Save file via API
     fetch(`${BASEURL}/save`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        name,
-        price,
-        items
-      })
+      body: JSON.stringify(fileData),
     })
-    alert(`Файл ${name} сохранен`)
-  }
+      .then(() => {
+        alert(`Saved file "${name}"`);
+      })
+      .catch((error) => {
+        console.error('Error saving to server:', error);
+        alert('Failed to save file to server.');
+      });
+
+    // Download file to user's computer
+    const blob = new Blob([JSON.stringify(fileData, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${name}.json`; // File name with .json extension
+    document.body.appendChild(link);
+    link.click();
+
+    // Clean up
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
 
   const createItem = (index = null) => {
     return {
@@ -52,22 +77,47 @@ function EditPage() {
   const [uploadedFile, setUploadedFile] = useState(null);
 
   const handleFileUpload = (event) => {
-    const file = event.target.files[0];
+    const file = event.target.files[0]
+    console.log(file)
+    console.log("1")
+    if (!file) {
+      return
+    };
+
+    if (!file.name.endsWith(".json")) {
+      alert("Only JSON config files are supported")
+      return
+    }
+
     const reader = new FileReader();
 
-    reader.onload = (event) => {
-      const contents = event.target.result;
-      const json = JSON.parse(contents);
-      setUploadedFile({ name: file.name, data: json});
+    reader.onload = () => {
+      const fileContent = reader.result;
+      let jsonContent = {}
+
+      try {
+        jsonContent = JSON.parse(fileContent)
+      } catch (error) {
+        console.log(error)
+        alert("Your file might be corrupted, since the app can't read it")
+        return
+      }
+
+      console.log(jsonContent)
+      setUploadedFile(jsonContent)
+    }
+
+    reader.onerror = () => {
+      alert('Failed to read file.');
     };
 
     reader.readAsText(file);
-  };
+  }
 
   useEffect(() => {
     if (uploadedFile) {
-
-      if (uploadedFile.data.casePrice) {
+      // Legacy code that was meant to deal with a different simulation runner
+      if (uploadedFile?.data?.casePrice) {
         setName(uploadedFile.name);
         setPrice(uploadedFile.data.casePrice);
         let newItems = []
@@ -84,8 +134,8 @@ function EditPage() {
       }
       else {
         setName(uploadedFile.name);
-        setPrice(uploadedFile.data.price);
-        setItems(uploadedFile.data.items);
+        setPrice(uploadedFile.price);
+        setItems(uploadedFile.items);
       }
     }
   }, [uploadedFile]);
@@ -102,6 +152,13 @@ function EditPage() {
         })
         .catch(error => console.error('Error:', error));
     }
+
+    if (state) {
+      const { uploadedFileContent, uploadedFileName } = state
+      setName(uploadedFileContent.name);
+      setPrice(uploadedFileContent.price);
+      setItems(uploadedFileContent.items);
+    }
   }, [])
 
   const handlePriceChange = (e) => {
@@ -111,7 +168,7 @@ function EditPage() {
   const handleNameChange = (e) => {
     setName(e.target.value)
   }
-    
+
   const handleAdd = () => {
     const maxIndex = Math.max(...items.map((item) => item.index))
     setItems([...items, createItem(maxIndex + 1)])
@@ -141,6 +198,11 @@ function EditPage() {
         items: items
       })
     }).then(response => response.json()).then(data => {
+      if (data?.error) {
+        alert(`Error: ${data.error}`)
+        setSimulationState(0)
+        return
+      }
       setSimulationState(2)
       setSimulationResult(data)
     })
@@ -153,7 +215,7 @@ function EditPage() {
       setAvgPayback((price - items.reduce((acc, item) => acc + Number(item.price) * (Number(item.dropRate) / 100), 0)).toFixed(2))
     }
   }, [items, price])
-  
+
   if (!items) {
     return <div>Loading...</div>
   }
@@ -167,20 +229,20 @@ function EditPage() {
         </div>
         <ItemContainer handleAdd={handleAdd} handleChange={handleChange} handleDelete={handleDelete} setItems={setItems} items={items} />
         <Footer simulate={simulate} name={name} price={price} onPriceChange={handlePriceChange} onNameChange={handleNameChange} hasUnallocated={unallocated} saveFile={() => saveFile(name, price, items)} />
-        { 
-        [1, 2].includes(simulationState) &&
+        {
+          [1, 2].includes(simulationState) &&
           (
             simulationState === 2 ? (
               <div className="simulation">
-                <h3>Результаты симуляции:</h3>
-                <p>Весь выигрыш: {simulationResult.allCasinoWin} руб</p>
-                <p>Средний выигрыш: {Number(simulationResult.avgCasinoWin).toFixed(2)} руб</p>
-                <p>Винрейт: {`${simulationResult.casinoWinrate}%`}</p>
+                <h3>Simulation results</h3>
+                <p>Winnings: {simulationResult.allCasinoWin}</p>
+                <p>Avg. win: {Number(simulationResult.avgCasinoWin).toFixed(2)}</p>
+                <p>Site's winrate: {`${simulationResult.casinoWinrate}%`}</p>
               </div>
             ) : <p>Загрузка симуляции...</p>
           )
         }
-        </div>
+      </div>
     </div >
   )
 }
