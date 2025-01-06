@@ -43,18 +43,18 @@ async def http_exception_handler(request, exc):
 
 @app.post("/save")
 async def save_data(case: Case):
-    case_dict = case.dict()
-    with open(f'json_data/{case_dict["name"]}.json', 'w') as f:
-        json.dump(case_dict, f)
-    return {"message": "Case saved successfully"}
+    # case_dict = case.dict()
+    # with open(f'json_data/{case_dict["name"]}.json', 'w') as f:
+    #     json.dump(case_dict, f)
+    return {"message": "Case is not saved due to this being a demo. You can save cases in the self-hosted version."}
 
 @app.get("/files")
 async def get_files():
-    # Get all the files in the json_data folder
-    files = os.listdir('json_data')
-    # Remove the .json
-    files = [file.split('.')[0] for file in files]
-    return {"files": files}
+    # # Get all the files in the json_data folder
+    # files = os.listdir('json_data')
+    # # Remove the .json
+    # files = [file.split('.')[0] for file in files]
+    return {"files": []} # Commented out since this is a demo version
 
 @app.get("/load/{file_name}")
 async def load_data(file_name: str):
