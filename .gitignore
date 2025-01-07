@@ -48,6 +48,7 @@ archive.zip
 
 json_data
 venv
+.env
 
 # vim temporary files
 *~
